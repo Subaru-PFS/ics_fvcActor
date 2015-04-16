@@ -97,7 +97,7 @@ class Camera(object):
     def sendStatusKeys(self, cmd):
         """ Send our status keys to the given command. """ 
 
-        cmd.inform('model="XIMEA %s"  SN="%s"' % (self.devname, self.devsn))
+        cmd.inform('model="XIMEA %s SN%s"' % (self.devname, self.devsn))
         cmd.inform('exptime=%dus  gain=%.2fdb' % (self.exptime, self.gain))
 
     def expose(self, cmd, expType, nframe = 1):
@@ -122,13 +122,15 @@ class Camera(object):
             cmd.inform('exposureState="exposing"')
         if expType == 'object':
             self._expose(nframe)
-            cmd.inform('exptime=%dus nframe=%d gain=%.2fdb' % (self.exptime, nframe, self.gain))
+            cmd.inform('text="exptime=%dus nframe=%d gain=%.2fdb"' % (self.exptime, nframe, self.gain))
+            cmd.inform('text="total effective exposure time=%.2fs"' % (self.exptime * nframe / 1000000.0))
         elif expType == 'bias':
             oexptime = self.exptime
             self._setExpTime(self.minexptime)
             self._expose(1)
             self._setExpTime(oexptime)
-            cmd.inform('exptime=%dus gain=%.2fdb' % (self.minexptime, self.gain))
+            cmd.inform('text="exptime=%dus nframe=1 gain=%.2fdb"' % (self.minexptime, self.gain))
+            cmd.inform('text="expose with minimum possible exposure time"')
         else:
             self.data = numpy.ones(shape=self.imageSize).astype('u2')
 
@@ -162,5 +164,5 @@ class Camera(object):
                      (gain, self.maxgain))
         else:
             self._setGain(gain)
-            cmd.inform('gain=%.2fdb"' % self.gain)
+            cmd.inform('gain=%.2fdb' % self.gain)
 

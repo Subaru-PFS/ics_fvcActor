@@ -81,7 +81,7 @@ class FvcCmd(object):
         return filename, image
             
     def expose(self, cmd):
-        """ Take an exposure with N frames. """
+        """ Take an exposure with multiple frames. """
 
         cmdKeys = cmd.cmd.keywords
         expType = cmdKeys[0].name
@@ -94,7 +94,7 @@ class FvcCmd(object):
         cmd.finish('exposureState="done"')
 
     def setExpTime(self, cmd):
-        """ Set exposure time(us) for each frame """
+        """ Set exposure time(us) for one frame """
 
         exptime = cmd.cmd.keywords['exptime'].values[0]
         self.actor.camera.setExpTime(cmd, exptime)
