@@ -1,7 +1,10 @@
+from __future__ import print_function
+from builtins import hex
+from builtins import object
 import numpy
 from time import localtime, strftime
 import time
-import pyfits
+import astropy.io.fits as pyfits
 import xiQ_device as xiQ
 
 def numberOfCamera():
@@ -76,7 +79,7 @@ class Camera(object):
         """Write image to a FITS file"""
 
         if(self.data.size == 0):
-            print "No image available"
+            print("No image available")
             return
         hdu = pyfits.PrimaryHDU(self.data)
         hdr = hdu.header

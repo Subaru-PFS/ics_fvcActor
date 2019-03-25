@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
+from __future__ import absolute_import
 import actorcore.Actor
 import camera
+from importlib import reload
 
 class Fvc(actorcore.Actor.Actor):
     def __init__(self, name, productName=None, configFile=None, debugLevel=30):

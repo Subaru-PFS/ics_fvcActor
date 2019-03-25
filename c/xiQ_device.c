@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <m3api/xiApi.h>
-#include <m3api/xiExt.h>
+//#include <m3api/xiExt.h>
 
 #define SetError(msg) {                         \
       PyErr_SetString(PyExc_RuntimeError, msg); \
@@ -281,15 +281,40 @@ static PyMethodDef xiQ_methods[] = {
 #define PyMODINIT void
 #endif
 
-PyMODINIT_FUNC initxiQ_device(void)
+PyMODINIT_FUNC
+#if PY_MAJOR_VERSION >= 3
+PyInit_xiQ_device(void)
+#else
+initxiQ_device(void)
+#endif
 {
    PyObject *m;
    int i;
 
    for(i = 0; i < MAX_CAMERA_NUMBER; i++)
       xiH[i] = NULL;
+
+#if PY_MAJOR_VERSION >= 3
+   static struct PyModuleDef moduledef = {
+      PyModuleDef_HEAD_INIT,
+      "xiQ_device",        /* m_name */
+      "XIMEA xiQ module",  /* m_doc */
+      -1,                  /* m_size */
+      xiQ_methods,         /* m_methods */
+      NULL,                /* m_reload */
+      NULL,                /* m_traverse */
+      NULL,                /* m_clear */
+      NULL,                /* m_free */
+    };
+   m = PyModule_Create(&moduledef);
+   if(m == NULL)
+      return NULL;
+   import_array();
+   return m;
+#else
    m = Py_InitModule("xiQ_device", xiQ_methods);
    if(m == NULL)
       return;
    import_array();
+#endif
 }

@@ -11,6 +11,7 @@ xiQ_module = Extension('xiQ_device',
     )
 
 sdss3tools.setup(
+    name = "FVC",
     description = "Fiber viewing camera actor.",
     ext_modules = [xiQ_module],
     )
