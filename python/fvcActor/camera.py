@@ -83,18 +83,18 @@ class Camera(object):
             return
         hdu = pyfits.PrimaryHDU(self.data)
         hdr = hdu.header
-        hdr.update('DATE', self.timestamp, 'file creation date (local)')
-        hdr.update('INSTRUME', 'XIMEA %s SN%s' % (self.devname, self.devsn),
+        hdr.set('DATE', self.timestamp, 'file creation date (local)')
+        hdr.set('INSTRUME', 'XIMEA %s SN%s' % (self.devname, self.devsn),
                                   'instrument used to acquire image')
         if self.imtype == 'object':
-            hdr.update('EXPTIME', self.exptime, 'exposure time (us)')
+            hdr.set('EXPTIME', self.exptime, 'exposure time (us)')
         elif self.imtype == 'bias':
-            hdr.update('EXPTIME', self.minexptime, 'exposure time (us)')
+            hdr.set('EXPTIME', self.minexptime, 'exposure time (us)')
         else:
-            hdr.update('EXPTIME', 0, 'exposure time (us)')
-        hdr.update('NFRAME', self.nframe, 'number of frames')
-        hdr.update('GAIN', self.gain, 'gain in db')
-        hdr.update('IMTYPE', self.imtype, 'exposure type')
+            hdr.set('EXPTIME', 0, 'exposure time (us)')
+        hdr.set('NFRAME', self.nframe, 'number of frames')
+        hdr.set('GAIN', self.gain, 'gain in db')
+        hdr.set('IMTYPE', self.imtype, 'exposure type')
         hdu.writeto(filename, checksum=True, clobber=True)
 
     def sendStatusKeys(self, cmd):
