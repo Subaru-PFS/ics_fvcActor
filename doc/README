@@ -4,4 +4,4 @@ http://www.ximea.com/support/wiki/apis/XIMEA_Linux_Software_Package
 - install OpenCV (Optional)
 http://www.ximea.com/support/wiki/vision-libraries/OpenCV_Installation_in_Linux
 
-
+Check that /sys/module/usbcore/parameters/usbfs_memory_mb is set to 0.

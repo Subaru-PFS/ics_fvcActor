@@ -54,6 +54,7 @@ static PyObject *xiQ_open(PyObject * self, PyObject * args)
    if(xiH[n_dev] == NULL) {
       res = xiOpenDevice(n_dev, &xiH[n_dev]);
       HandleResult(res, "xiOpenDevice failed");
+      printf("Pointer address: %p\n", xiH[n_dev]);
    }
    // Check image width
    res = xiGetParamInt(xiH[n_dev], XI_PRM_WIDTH, &width);
@@ -68,7 +69,7 @@ static PyObject *xiQ_open(PyObject * self, PyObject * args)
       SetError("image height mismatched");
 
    // Setting output data format
-   res = xiSetParamInt(xiH[n_dev], XI_PRM_IMAGE_DATA_FORMAT, XI_RAW16);
+   res = xiSetParamInt(xiH[n_dev], XI_PRM_IMAGE_DATA_FORMAT, XI_RAW8);
    HandleResult(res, "xiSetParamInt failed: XI_PRM_IMAGE_DATA_FORMAT");
 
    Py_RETURN_NONE;
@@ -97,7 +98,7 @@ static PyObject *xiQ_expose(PyObject * self, PyObject * args)
    XI_IMG img;
    npy_intp dims[2] = { IMG_HEIGHT, IMG_WIDTH };
    void *data;
-   uint16_t *sptr, *dptr;
+   uint8_t *sptr, *dptr;
 
    img.size = sizeof(XI_IMG);
    img.bp = NULL;
@@ -110,10 +111,10 @@ static PyObject *xiQ_expose(PyObject * self, PyObject * args)
       SetError("camera not found or not opened");
 
    // allocate memory buffer
-   data = malloc(IMG_SIZE * 2);
+   data = malloc(IMG_SIZE);
    if(data == NULL)
       SetError("malloc failed");
-   bzero(data, IMG_SIZE * 2);
+   bzero(data, IMG_SIZE);
 
    // Start acquisition
    res = xiStartAcquisition(xiH[n_dev]);
@@ -135,7 +136,7 @@ static PyObject *xiQ_expose(PyObject * self, PyObject * args)
    res = xiStopAcquisition(xiH[n_dev]);
    HandleResult(res, "xiStopAcquisition failed");
 
-   return PyArray_SimpleNewFromData(2, dims, PyArray_UINT16, data);
+   return PyArray_SimpleNewFromData(2, dims, PyArray_UINT8, data);
 }
 
 // Set exposure parameter
